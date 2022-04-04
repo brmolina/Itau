@@ -1,0 +1,14 @@
+.THIS .itau-pattern-button {
+  background-color: #ec7000;
+  color: white;
+}
+.THIS .itau-orange-color {
+  background-color: #ec7000;
+}
+.THIS .itau-pattern-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.THIS .itau-pattern-button:hover {
+  opacity: 0.8;
+}

@@ -1,0 +1,68 @@
+<aura:component
+    implements="flexipage:availableForAllPageTypes,force:hasRecordId,flexipage:availableForRecordHome"
+    controller="EX3_CreateDefinicaoEstrategicaController"
+>
+    <!-- Atributos -->
+    <aura:attribute name="recordId" type="Id" />
+    <aura:attribute name="recordLoadError" type="String" />
+    <aura:attribute name="viewComponent" type="Boolean" default="false" />
+    <aura:attribute name="simpleRecord" type="Object" />
+    <aura:attribute name="recordFields" type="List" default="['EX3_Status__c']" />
+    <aura:attribute name="isDisabledJuridico" type="Boolean" default="false" />
+    
+
+    <!-- Atributos de permissão -->
+    <aura:attribute name="hasPermissionCaptura" type="Boolean" default="true" />
+    <aura:attribute name="hasPermissionSolicitacoes" type="Boolean" default="true" />
+
+    <!-- Handlers -->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+
+    <!-- Eventos -->
+    <aura:registerEvent name="slaConcluido" type="c:EX3_SlaMilestoneConcluido" />
+
+    <!-- Utilidades -->
+    <c:EX3_AuraUtils aura:id="utils" />
+
+    <!-- LDS -->
+    <force:recordData
+        aura:id="recordLoader"
+        recordId="{!v.recordId}"
+        targetFields="{!v.simpleRecord}"
+        layoutType="FULL"
+        fields="{!v.recordFields}"
+        recordUpdated="{!c.recordUpdated}"
+    />
+
+    <!-- Bibliotecas -->
+    <lightning:workspaceAPI aura:id="workspace" />
+
+    <!-- HTML -->
+    <div class="slds-box slds-theme_default">
+        <div class="slds-grid slds-wrap">
+            <div class="slds-align_absolute-center">
+                <aura:if isTrue="{!v.hasPermissionCaptura}">
+                    <lightning:button
+                        class="itau-pattern-button"
+                        label="Finalizar Captura de Documentos"
+                        title="Finalizar Captura de Documentos"
+                        onclick="{!c.createRecord}"
+                        disabled="{! v.isDisabledJuridico == true || v.simpleRecord.EX3_Status__c == 'Finalizado' }"
+                    />
+                    </aura:if>
+                    <aura:if isTrue="{!v.hasPermissionSolicitacoes}">
+                    <lightning:button
+                        class="itau-pattern-button"
+                        label="Solicitações"
+                        title="Solicitações"
+                        onclick="{!c.acionarTarefas}"
+                    />
+                </aura:if>
+            </div>
+        </div>
+    </div>
+
+    <aura:if isTrue="{!v.viewComponent}">
+        <c:EX3_ListTarefas recordId="{!v.recordId}" />
+    </aura:if>
+</aura:component>

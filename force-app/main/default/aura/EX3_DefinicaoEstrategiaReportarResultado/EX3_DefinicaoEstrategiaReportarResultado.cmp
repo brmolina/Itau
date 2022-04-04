@@ -1,0 +1,79 @@
+<aura:component controller="EX3_DefinicaoEstrategiaController" implements="flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes" access="global" >
+    <aura:attribute name="recordId" type="String" />	
+    <aura:attribute name="record" type="Object" />
+    <aura:attribute name="distribuicao" type="Object" />
+    <aura:attribute name="title" type="String" default="Reportar Resultado por Objeto"/>
+    <aura:attribute name="records" type="List"/>	
+    <aura:attribute name="columns" type="List"/>
+    <aura:attribute name="optionsResultado2Instancia" type="List" access="public" default="[]"/>
+    <aura:attribute name="spinner" type="boolean" default="false"/>
+    <aura:attribute name="possuiResultado2Instancia" type="boolean" default="true"/>
+    <aura:attribute name="comboboxAlerta" type="String" />
+    <aura:attribute name="conclusaoPasta" type="String" default=""/>
+
+    <aura:handler name="init" value="{! this }" action="{! c.init }"/>
+    <force:recordData recordId="{!v.recordId}" targetRecord ="{!v.record}" targetFields ="{!v.distribuicao}" aura:id="forceRecord"
+                  fields="Id, Name, EX3_Etapa__c, EX3_Conclusao_da_Pasta__c, EX3_Distribuicao_Conclusao_Analise__c"/>
+                                   
+            <lightning:card>
+                <aura:if isTrue="{!v.spinner}">
+                    <lightning:spinner alternativeText="Carregando! Aguarde um instante!"/>
+                </aura:if>
+                <aura:set attribute="title">
+                    <lightning:icon iconName="custom:custom97" size="small"/>&nbsp;{!v.title} &nbsp;({!v.records.length})
+                </aura:set>
+                <aura:set attribute="footer">
+                    <div class="slds-clearfix">
+                        <div class="slds-text-align_left">Conclusão da Pasta: <b>{!v.distribuicao.EX3_Conclusao_da_Pasta__c}</b></div>
+                            <lightning:button disabled = "{!(!and(v.records.length > 0,v.distribuicao.EX3_Etapa__c == '9'))}" label="Salvar" class="slds-float_right"  onclick="{!c.handleSalvar}" />
+                    </div>
+                    
+                </aura:set>
+                <table class="slds-table slds-table_cell-buffer slds-table_bordered" style = " border-collapse: collapse" aria-labelledby="element-with-table-label other-element-with-table-label">
+                    <thead>
+                        <tr class="slds-line-height_reset">
+
+                        <th scope="col">
+                            <div class="slds-truncate" title="Objeto" style="width: 120px;">Objeto</div>
+                        </th>
+
+                        <th  scope="col">
+                            <div class="slds-truncate" title="Resultado 1ª Instância">Resultado 1ª Instância</div>
+                        </th>
+                        
+                        <th scope="col">
+                            <div class="slds-truncate" title="Resultado 2ª Instância">Resultado 2ª Instância</div>
+                        </th>
+                        
+                        <th scope="col">
+                            <div class="slds-truncate" title="Conclusão">Conclusão</div>
+                        </th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <aura:iteration items="{!v.records}" var="item" indexVar="index" > 
+                            <tr class="{!'slds-hint-parent ' + (v.comboboxAlerta == index ? 'linhaWarming' : '')}">
+                                
+                                <td scope="row">
+                                    <lightning:formattedText value="{!item.EX3_Nome_do_Pedido__c}"/>
+                                </td>
+                                
+                                <td scope="row">
+                                    <lightning:formattedText value="{!item.resultado}"/>
+                                </td>
+                                                            
+                                <td scope="row">
+                                    <lightning:combobox id = "{!index}" class="{!(and(!item.EX3_Resultado_2_Instancia__c, !v.possuiResultado2Instancia) ? 'comboboxError' : '' )}" name="Resultado2Instancia" options="{!v.optionsResultado2Instancia}" value="{!item.EX3_Resultado_2_Instancia__c}" readonly="{!v.distribuicao.EX3_Etapa__c != '9'}" variant = "label-hidden"/>
+                                </td>
+                                
+                                <td scope="row">
+                                    <lightning:formattedText value="{!item.EX3_Conclusao__c}"/>
+                                </td>
+
+                            </tr>
+                        </aura:iteration>
+                    </tbody>
+                </table>
+            </lightning:card>
+</aura:component>

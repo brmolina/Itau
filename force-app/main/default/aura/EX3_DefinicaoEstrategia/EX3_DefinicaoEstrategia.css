@@ -1,0 +1,24 @@
+.THIS .comboboxAlert {
+    border-style: solid !important;
+    border-color: red !important;
+    border-radius: 7px !important;
+    outline: none !important;
+    box-shadow: none !important;
+}
+.THIS .comboboxWarming {
+    border-style: solid !important;
+    border-color: #eca306 !important;
+    border-radius: 7px !important;
+    outline: none !important;
+    box-shadow: none !important;
+}
+.THIS .linhaWarming {
+    
+    border-style: solid !important;
+    border-color: #faefb4 !important;
+    /* background: #f9e154 !important; */
+}
+.THIS .slds-combobox__input:focus {
+    border-color:lightgrey !important;
+    box-shadow: none !important;
+}
