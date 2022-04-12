@@ -76,13 +76,14 @@ public with sharing class EX3_DefineResponsavelEtapa {
             distribuicao.EX3_Responsavel_Alocacao__c = responsavelName;
         }
 
-        else if(distribuicao.EX3_Responsavel_Decisoria__c == 'Advogados Internos' && distribuicao.EX3_Decisoria_Niveis_Atuacao__c.contains('Priorização de Acordo')){
+        /* else if(distribuicao.EX3_Responsavel_Decisoria__c == 'Advogados Internos' && distribuicao.EX3_Decisoria_Niveis_Atuacao__c.contains('Priorização de Acordo')){
             distribuicao.EX3_Responsavel_Alocacao__c = 'Analistas de Precificação';
             
-        } else if(distribuicao.EX3_Responsavel_Decisoria__c != 'Advogados Internos' && distribuicao.EX3_Decisoria_Atuacao__c.contains('Advogado Interno')){
+        } */ else if(distribuicao.EX3_Responsavel_Decisoria__c != 'Advogados Internos' && distribuicao.EX3_Decisoria_Atuacao__c.contains('Advogado Interno')){
             distribuicao.EX3_Responsavel_Alocacao__c = 'Advogados Internos';
+            //distribuicao.EX3_Transbordar_Atuacao_Para_o_Credencia__c = false;
             
-        } else if(distribuicao.EX3_Responsavel_Alocacao__c == null && responsavelName != null) {
+        } else if(/* distribuicao.EX3_Responsavel_Alocacao__c == null &&  */responsavelName != null) {
         distribuicao.EX3_Responsavel_Alocacao__c = responsavelName;
         }
     }
@@ -97,7 +98,7 @@ public with sharing class EX3_DefineResponsavelEtapa {
     //TODO - definir o mesmo responsável da etapa alocação de pauta
     public static void definirResponsavelReportarStatusAtuacao(EX3_DistribuicaoRecurso__c distribuicao) {
         
-        if(distribuicao.EX3_Responsavel_Reportar_Status__c == null && distribuicao.EX3_Responsavel_Alocacao__c != null)
+        if(/* distribuicao.EX3_Responsavel_Reportar_Status__c == null &&  */distribuicao.EX3_Responsavel_Alocacao__c != null)
         distribuicao.EX3_Responsavel_Reportar_Status__c = distribuicao.EX3_Responsavel_Alocacao__c;
     }
     

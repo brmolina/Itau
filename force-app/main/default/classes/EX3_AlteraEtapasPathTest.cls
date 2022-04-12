@@ -265,7 +265,170 @@ public with sharing class EX3_AlteraEtapasPathTest {
         Test.stopTest();
 
         for(EX3_DistribuicaoRecurso__c distribuicao : [SELECT Id, EX3_Etapa__c FROM EX3_DistribuicaoRecurso__c]){
-            System.assertEquals(distribuicao.EX3_Etapa__c, '8');
+            System.assertEquals(distribuicao.EX3_Etapa__c, '7');
+        }
+    }
+    
+    @isTest
+    public static void testaAlocacaoEmPautaParaInclusaoDePauta() {
+
+        List<EX3_DistribuicaoRecurso__c> lstDistribuicao = [SELECT Id FROM EX3_DistribuicaoRecurso__c];
+
+        for(EX3_DistribuicaoRecurso__c distribuicao : lstDistribuicao){
+            distribuicao.EX3_Data_da_Publicao__c = proximoDia();
+            distribuicao.EX3_Turma__c = '1ª Turma';
+            distribuicao.EX3_TRT__c = '	TRT 1';
+        }
+
+        update lstDistribuicao;
+
+        for(EX3_DistribuicaoRecurso__c distribuicao : lstDistribuicao){
+            distribuicao.EX3_Classificatoria_Improcedencia__c = 'Sim';
+            distribuicao.EX3_Classificatoria_Superior_299K__c = 'Não';
+            distribuicao.EX3_Classificatoria_Superior_1MM__c = 'Não';
+            distribuicao.EX3_Classificatoria_Temas_Prioritarios__c = 'Não';
+            distribuicao.EX3_Classificatoria_Estrageria_Defesa__c = 'Sim';
+        }
+
+        update lstDistribuicao;
+
+        for(EX3_DistribuicaoRecurso__c distribuicao : lstDistribuicao){
+            distribuicao.EX3_Inclusao_Pauta_Data_Publicacao__c = proximoDia();
+            distribuicao.EX3_Data_da_Pauta__c = proximoDia();
+            distribuicao.EX3_Pauta_Tipo_de_Julgamento__c = '1';
+            distribuicao.EX3_Pauta_Relator__c = 'Teste';
+            distribuicao.EX3_Pauta_Revisor__c = 'Teste';
+        }
+
+        update lstDistribuicao;
+
+        for(EX3_DistribuicaoRecurso__c distribuicao : lstDistribuicao){
+            distribuicao.EX3_Decisoria_Improcedencia__c = 'Sim';
+            distribuicao.EX3_Decisoria_Superior_299K__c = 'Não';
+            distribuicao.EX3_Decisoria_Superior_1MM__c = 'Não';
+            distribuicao.EX3_Decisoria_Temas_Prioritarios__c = 'Não';
+            distribuicao.EX3_Decisoria_Estrageria_Defesa__c = 'Sim';
+            distribuicao.EX3_discordancia__c = '6';
+        }
+        
+        update lstDistribuicao;
+        
+        List<Contact> advogados = [SELECT Id FROM Contact];
+        
+        
+        for(EX3_DistribuicaoRecurso__c distribuicao : lstDistribuicao){
+            distribuicao.EX3_UF_OAB__c = 'MG';
+            distribuicao.EX3_Advogado__c = advogados[0].Id; 
+            distribuicao.EX3_Transbordar_Atuacao_Para_o_Credencia__c = true;
+        }
+        
+        update lstDistribuicao;
+        
+        for(EX3_DistribuicaoRecurso__c distribuicao : lstDistribuicao){
+            distribuicao.BypassValidationRule__c = true;
+            distribuicao.EX3_Decisoria_Niveis_Atuacao__c = 'Memoriais e Sustentação Oral';
+            distribuicao.EX3_Memoriais_Foram_Entregues__c = 'Não';
+            distribuicao.EX3_Memoriais_Nao_Entregues__c = 'Retirado de Pauta';
+            distribuicao.EX3_Memoriais_Entregues__c = 'Com Despacho';
+            distribuicao.EX3_Sustentacao_Foi_Realizada__c = 'Não';
+            distribuicao.EX3_Sustentacao_Nao_Realizada__c = 'Retirado de Pauta';
+        }
+        
+        List<EX3_DistribuicaoRecurso__c> lstDistribuicao2 = [SELECT Id FROM EX3_DistribuicaoRecurso__c];
+
+        for(EX3_DistribuicaoRecurso__c distribuicao : lstDistribuicao2){
+            distribuicao.EX3_Classificatoria_Temas_Prioritarios__c = 'Não';
+        }
+
+        Test.startTest();
+            update lstDistribuicao;
+        	update lstDistribuicao2;
+        Test.stopTest();
+
+        for(EX3_DistribuicaoRecurso__c distribuicao : [SELECT Id, EX3_Etapa__c FROM EX3_DistribuicaoRecurso__c]){
+            System.assertEquals(distribuicao.EX3_Etapa__c, '5');
+        }
+    }
+    
+    @isTest
+    public static void testaAlocacaoEmPautaParaSegundaInstanciaConcluida() {
+
+        List<EX3_DistribuicaoRecurso__c> lstDistribuicao = [SELECT Id FROM EX3_DistribuicaoRecurso__c];
+
+        for(EX3_DistribuicaoRecurso__c distribuicao : lstDistribuicao){
+            distribuicao.EX3_Data_da_Publicao__c = proximoDia();
+            distribuicao.EX3_Turma__c = '1ª Turma';
+            distribuicao.EX3_TRT__c = '	TRT 1';
+        }
+
+        update lstDistribuicao;
+
+        for(EX3_DistribuicaoRecurso__c distribuicao : lstDistribuicao){
+            distribuicao.EX3_Classificatoria_Improcedencia__c = 'Sim';
+            distribuicao.EX3_Classificatoria_Superior_299K__c = 'Não';
+            distribuicao.EX3_Classificatoria_Superior_1MM__c = 'Não';
+            distribuicao.EX3_Classificatoria_Temas_Prioritarios__c = 'Não';
+            distribuicao.EX3_Classificatoria_Estrageria_Defesa__c = 'Sim';
+        }
+
+        update lstDistribuicao;
+
+        for(EX3_DistribuicaoRecurso__c distribuicao : lstDistribuicao){
+            distribuicao.EX3_Inclusao_Pauta_Data_Publicacao__c = proximoDia();
+            distribuicao.EX3_Data_da_Pauta__c = proximoDia();
+            distribuicao.EX3_Pauta_Tipo_de_Julgamento__c = '1';
+            distribuicao.EX3_Pauta_Relator__c = 'Teste';
+            distribuicao.EX3_Pauta_Revisor__c = 'Teste';
+        }
+
+        update lstDistribuicao;
+
+        for(EX3_DistribuicaoRecurso__c distribuicao : lstDistribuicao){
+            distribuicao.EX3_Decisoria_Improcedencia__c = 'Sim';
+            distribuicao.EX3_Decisoria_Superior_299K__c = 'Não';
+            distribuicao.EX3_Decisoria_Superior_1MM__c = 'Não';
+            distribuicao.EX3_Decisoria_Temas_Prioritarios__c = 'Não';
+            distribuicao.EX3_Decisoria_Estrageria_Defesa__c = 'Sim';
+            distribuicao.EX3_discordancia__c = '6';
+        }
+        
+        update lstDistribuicao;
+        
+        List<Contact> advogados = [SELECT Id FROM Contact];
+        
+        
+        for(EX3_DistribuicaoRecurso__c distribuicao : lstDistribuicao){
+            distribuicao.EX3_UF_OAB__c = 'MG';
+            distribuicao.EX3_Advogado__c = advogados[0].Id; 
+            distribuicao.EX3_Transbordar_Atuacao_Para_o_Credencia__c = true;
+        }
+        
+        update lstDistribuicao;
+        
+        for(EX3_DistribuicaoRecurso__c distribuicao : lstDistribuicao){
+            distribuicao.BypassValidationRule__c = true;
+            distribuicao.EX3_Decisoria_Niveis_Atuacao__c = 'Memoriais e Sustentação Oral';
+            distribuicao.EX3_Memoriais_Foram_Entregues__c = 'Não';
+            distribuicao.EX3_Memoriais_Nao_Entregues__c = 'Retirado de Pauta';
+            distribuicao.EX3_Sustentacao_Foi_Realizada__c = 'Não';
+            distribuicao.EX3_Sustentacao_Nao_Realizada__c = 'Acordo Formalizado';
+            
+            distribuicao.EX3_Conclusao_da_Pasta__c = 'Ganhamos';
+        }
+        
+        List<EX3_DistribuicaoRecurso__c> lstDistribuicao2 = [SELECT Id FROM EX3_DistribuicaoRecurso__c];
+
+        for(EX3_DistribuicaoRecurso__c distribuicao : lstDistribuicao2){
+            distribuicao.EX3_Classificatoria_Temas_Prioritarios__c = 'Não';
+        }
+
+        Test.startTest();
+            update lstDistribuicao;
+        	update lstDistribuicao2;
+        Test.stopTest();
+
+        for(EX3_DistribuicaoRecurso__c distribuicao : [SELECT Id, EX3_Etapa__c FROM EX3_DistribuicaoRecurso__c]){
+            System.assertEquals(distribuicao.EX3_Etapa__c, '10');
         }
     }
     
@@ -325,12 +488,12 @@ public with sharing class EX3_AlteraEtapasPathTest {
         update lstDistribuicao;
         
         for(EX3_DistribuicaoRecurso__c distribuicao : lstDistribuicao){
+            distribuicao.BypassValidationRule__c = true;
             distribuicao.EX3_Decisoria_Niveis_Atuacao__c = 'Memoriais e Sustentação Oral';
             distribuicao.EX3_Memoriais_Foram_Entregues__c = 'Sim'; 
             distribuicao.EX3_Memoriais_Entregues__c = 'Com Despacho';
-            distribuicao.EX3_Sustentacao_Foi_Realizada__c = 'Não';
+            distribuicao.EX3_Sustentacao_Foi_Realizada__c = 'Sim';
             distribuicao.EX3_Sustentacao_Nao_Realizada__c = 'Retirado de Pauta';
-            distribuicao.EX3_Conclusao_da_Pasta__c = 'teste';
         }
         
         List<EX3_DistribuicaoRecurso__c> lstDistribuicao2 = [SELECT Id FROM EX3_DistribuicaoRecurso__c];
@@ -346,6 +509,92 @@ public with sharing class EX3_AlteraEtapasPathTest {
 
         for(EX3_DistribuicaoRecurso__c distribuicao : [SELECT Id, EX3_Etapa__c FROM EX3_DistribuicaoRecurso__c]){
             System.assertEquals(distribuicao.EX3_Etapa__c, '9');
+        }
+    }
+    
+    @isTest
+    public static void testaReportarResultadoPorObjetoParaSegundaInstanciaConcluida() {
+
+        List<EX3_DistribuicaoRecurso__c> lstDistribuicao = [SELECT Id FROM EX3_DistribuicaoRecurso__c];
+
+        for(EX3_DistribuicaoRecurso__c distribuicao : lstDistribuicao){
+            distribuicao.EX3_Data_da_Publicao__c = proximoDia();
+            distribuicao.EX3_Turma__c = '1ª Turma';
+            distribuicao.EX3_TRT__c = '	TRT 1';
+        }
+
+        update lstDistribuicao;
+
+        for(EX3_DistribuicaoRecurso__c distribuicao : lstDistribuicao){
+            distribuicao.EX3_Classificatoria_Improcedencia__c = 'Sim';
+            distribuicao.EX3_Classificatoria_Superior_299K__c = 'Não';
+            distribuicao.EX3_Classificatoria_Superior_1MM__c = 'Não';
+            distribuicao.EX3_Classificatoria_Temas_Prioritarios__c = 'Não';
+            distribuicao.EX3_Classificatoria_Estrageria_Defesa__c = 'Sim';
+        }
+
+        update lstDistribuicao;
+
+        for(EX3_DistribuicaoRecurso__c distribuicao : lstDistribuicao){
+            distribuicao.EX3_Inclusao_Pauta_Data_Publicacao__c = proximoDia();
+            distribuicao.EX3_Data_da_Pauta__c = proximoDia();
+            distribuicao.EX3_Pauta_Tipo_de_Julgamento__c = '1';
+            distribuicao.EX3_Pauta_Relator__c = 'Teste';
+            distribuicao.EX3_Pauta_Revisor__c = 'Teste';
+        }
+
+        update lstDistribuicao;
+
+        for(EX3_DistribuicaoRecurso__c distribuicao : lstDistribuicao){
+            distribuicao.EX3_Decisoria_Improcedencia__c = 'Sim';
+            distribuicao.EX3_Decisoria_Superior_299K__c = 'Não';
+            distribuicao.EX3_Decisoria_Superior_1MM__c = 'Não';
+            distribuicao.EX3_Decisoria_Temas_Prioritarios__c = 'Não';
+            distribuicao.EX3_Decisoria_Estrageria_Defesa__c = 'Sim';
+            distribuicao.EX3_discordancia__c = '6';
+        }
+        
+        update lstDistribuicao;
+        
+        List<Contact> advogados = [SELECT Id FROM Contact];
+        
+        
+        for(EX3_DistribuicaoRecurso__c distribuicao : lstDistribuicao){
+            distribuicao.EX3_UF_OAB__c = 'MG';
+            distribuicao.EX3_Advogado__c = advogados[0].Id; 
+            distribuicao.EX3_Transbordar_Atuacao_Para_o_Credencia__c = true;
+        }
+        
+        update lstDistribuicao;
+        
+    /*    for(EX3_DistribuicaoRecurso__c distribuicao : lstDistribuicao){
+            distribuicao.BypassValidationRule__c = true;
+            distribuicao.EX3_Decisoria_Niveis_Atuacao__c = 'Memoriais e Sustentação Oral';
+            distribuicao.EX3_Memoriais_Foram_Entregues__c = 'Sim'; 
+            distribuicao.EX3_Memoriais_Entregues__c = 'Com Despacho';
+            distribuicao.EX3_Sustentacao_Foi_Realizada__c = 'Sim';
+            distribuicao.EX3_Sustentacao_Nao_Realizada__c = 'Retirado de Pauta';
+        }
+        
+        update lstDistribuicao;
+     */   
+        for(EX3_DistribuicaoRecurso__c distribuicao : lstDistribuicao){
+            distribuicao.EX3_Conclusao_da_Pasta__c = 'Ganhamos';
+        }
+        
+        List<EX3_DistribuicaoRecurso__c> lstDistribuicao2 = [SELECT Id FROM EX3_DistribuicaoRecurso__c];
+
+        for(EX3_DistribuicaoRecurso__c distribuicao : lstDistribuicao2){
+            distribuicao.EX3_Classificatoria_Temas_Prioritarios__c = 'Não';
+        }
+
+        Test.startTest();
+            update lstDistribuicao;
+        	update lstDistribuicao2;
+        Test.stopTest();
+
+        for(EX3_DistribuicaoRecurso__c distribuicao : [SELECT Id, EX3_Etapa__c FROM EX3_DistribuicaoRecurso__c]){
+            System.assertEquals(distribuicao.EX3_Etapa__c, '10');
         }
     }
 
@@ -401,11 +650,12 @@ public with sharing class EX3_AlteraEtapasPathTest {
         Date proximoDia = System.today()+1;
         Integer quantidade = mydate.daysBetween(proximoDia);
         Date diaSemana = proximoDia;
+        
         if((Math.Mod(quantidade, 7)) == 0){
-            diaSemana = proximoDia + 2;
+            diaSemana = proximoDia + 3;
         }else{
 	        if((Math.Mod(quantidade, 7) == 6)){
-                diaSemana = proximoDia + 2;
+                diaSemana = proximoDia + 3;
               }
         }
         return diaSemana;

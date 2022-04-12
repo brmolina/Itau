@@ -53,34 +53,42 @@ public with sharing class EX3_AlteraEtapasPath {
                         EX3_DefineResponsavelEtapa.definirUltimaModificacaoDistribuicao(distribuicao, distribuicaoOld);
                         EX3_DefineResponsavelEtapa.definirResponsavelClassificatoria(distribuicao, responsavelName);
                         distribuicao.EX3_Etapa__c = '4';
-
+                        distribuicao.EX3_Resultado_da_Segunda_Instancia__c = null;
+                        
                         if(validarCamposArvoreClassificatoria(distribuicao)){
-
+                            
                             EX3_DefineResponsavelEtapa.definirUltimaModificacaoClassificatoria(distribuicao, distribuicaoOld);
                             EX3_DefineResponsavelEtapa.definirResponsavelInclusaoEmPauta(distribuicao, responsavelName);
                             distribuicao.EX3_Etapa__c = '5';
+                            distribuicao.EX3_Resultado_da_Segunda_Instancia__c = null;
                             
                             if(validarCamposInclusaoPauta(distribuicao)){
-
+                                
                                 EX3_DefineResponsavelEtapa.definirUltimaModificacaoInclusaoEmPauta(distribuicao, distribuicaoOld);
                                 EX3_DefineResponsavelEtapa.definirResponsavelDecisoria(distribuicao, responsavelName);
                                 distribuicao.EX3_Etapa__c = '6';
+                                distribuicao.EX3_Resultado_da_Segunda_Instancia__c = null;
+                                
+                                if(!validarCamposArvoreDecisoria(distribuicao)){
+                                    continue;
+                                }
                                 
                                 if(validarCamposArvoreDecisoria(distribuicao)){
-
+                                    
                                     EX3_DefineResponsavelEtapa.definirResponsavelAlocacaoDePauta(distribuicao, responsavelName, transbordar);
                                     EX3_DefineResponsavelEtapa.definirUltimaModificacaoDecisoria(distribuicao, distribuicaoOld);
                                     distribuicao.EX3_Etapa__c = '7';    
+                                    distribuicao.EX3_Resultado_da_Segunda_Instancia__c = null;
                                 }
                                 if(validarCamposAlocacaoDePauta(distribuicao, distribuicaoOld)){
-
+                                    
                                     if(distribuicao.EX3_Transbordar_Atuacao_Para_o_Credencia__c == true && (distribuicao.EX3_Transbordar_Atuacao_Para_o_Credencia__c != distribuicaoOld.EX3_Transbordar_Atuacao_Para_o_Credencia__c)){
                                         transbordar = true;
                                         EX3_DefineResponsavelEtapa.definirResponsavelAlocacaoDePauta(distribuicao, responsavelName, transbordar);
                                         EX3_DefineResponsavelEtapa.definirUltimaModificacaoAlocacaoDePauta(distribuicao, distribuicaoOld);
                                         continue;
                                     }
-
+                                    
                                     EX3_DefineResponsavelEtapa.definirUltimaModificacaoAlocacaoDePauta(distribuicao, distribuicaoOld);
                                     EX3_DefineResponsavelEtapa.definirResponsavelReportarStatusAtuacao(distribuicao);
                                     distribuicao.EX3_Transbordar_Atuacao_Para_o_Credencia__c = false;
@@ -88,23 +96,92 @@ public with sharing class EX3_AlteraEtapasPath {
                                         continue;
                                     }
                                     distribuicao.EX3_Etapa__c = '8';    
+                                    distribuicao.EX3_Resultado_da_Segunda_Instancia__c = null;
                                 }
                                 if(validarCamposAlocacaoDePautaNaoPreenchidos(distribuicao, distribuicaoOld)){
                                     continue;
                                 }
                                 if(validarCamposReportarStatusAtuacaoNoTRT(distribuicao)){
-
+                                    /* System.debug('distribuicao.EX3_Decisoria_Niveis_Atuacao__c'+ distribuicao.EX3_Decisoria_Niveis_Atuacao__c);
+                                    System.debug('distribuicao.EX3_Memoriais_Foram_Entregues__c'+ distribuicao.EX3_Memoriais_Foram_Entregues__c);
+                                    System.debug('distribuicao.EX3_Memoriais_Nao_Entregues__c'+ distribuicao.EX3_Memoriais_Nao_Entregues__c);
+                                    System.debug('distribuicao.EX3_Memoriais_Entregues__c'+ distribuicao.EX3_Memoriais_Entregues__c);
+                                    System.debug('distribuicao.EX3_Sustentacao_Foi_Realizada__c'+ distribuicao.EX3_Sustentacao_Foi_Realizada__c);
+                                    System.debug('distribuicao.EX3_Sustentacao_Nao_Realizada__c'+ distribuicao.EX3_Sustentacao_Nao_Realizada__c); */
+                                    if(validarAlteracaoReportarStatusAtuacaoNoTRT(distribuicao, distribuicaoOld)){
+                                        if((distribuicao.EX3_Decisoria_Niveis_Atuacao__c == 'Memoriais' 
+                                        && distribuicao.EX3_Memoriais_Foram_Entregues__c  == 'Não' 
+                                        && distribuicao.EX3_Memoriais_Nao_Entregues__c == 'Retirado de Pauta')
+                                        
+                                        || (distribuicao.EX3_Decisoria_Niveis_Atuacao__c == 'Memoriais e Sustentação Oral' 
+                                        && distribuicao.EX3_Memoriais_Foram_Entregues__c  == 'Sim'
+                                        && (distribuicao.EX3_Memoriais_Entregues__c == 'Com Despacho' 
+                                                || distribuicao.EX3_Memoriais_Entregues__c == 'Sem Despacho (Turma não realiza)')
+                                                && distribuicao.EX3_Sustentacao_Foi_Realizada__c == 'Não'
+                                                && distribuicao.EX3_Sustentacao_Nao_Realizada__c == 'Retirado de Pauta')
+                                                
+                                                || (distribuicao.EX3_Decisoria_Niveis_Atuacao__c == 'Memoriais e Sustentação Oral'
+                                                && distribuicao.EX3_Memoriais_Foram_Entregues__c  == 'Não'
+                                                && (distribuicao.EX3_Memoriais_Nao_Entregues__c == 'Retirado de Pauta' 
+                                                || distribuicao.EX3_Memoriais_Nao_Entregues__c == 'Decisão Validada com Advogado Interno'
+                                                || distribuicao.EX3_Memoriais_Nao_Entregues__c == 'Entregue Anteriormente')
+                                                && distribuicao.EX3_Sustentacao_Foi_Realizada__c == 'Não'
+                                                && distribuicao.EX3_Sustentacao_Nao_Realizada__c == 'Retirado de Pauta')
+                                                ){
+                                                    EX3_LimparEtapas.limparEtapaInclusaoDePauta(distribuicao);
+                                                    EX3_LimparEtapas.limparEtapaArvoreDecisoria(distribuicao);
+                                                    EX3_LimparEtapas.limparEtapaAlocacaoDePauta(distribuicao);
+                                                    EX3_LimparEtapas.limparEtapaReportarStatus(distribuicao);
+                                                    EX3_LimparEtapas.limparEtapaReportarResultado(distribuicao);
+                                                    distribuicao.EX3_Etapa__c = '5';
+                                                    continue;
+                                                }
+                                    }
+                                    if((distribuicao.EX3_Decisoria_Niveis_Atuacao__c == 'Memoriais' 
+                                        && distribuicao.EX3_Memoriais_Foram_Entregues__c  == 'Não' 
+                                        && distribuicao.EX3_Memoriais_Nao_Entregues__c == 'Acordo Formalizado')
+                                            || (distribuicao.EX3_Decisoria_Niveis_Atuacao__c == 'Memoriais e Sustentação Oral' 
+                                        && distribuicao.EX3_Memoriais_Foram_Entregues__c  == 'Sim'
+                                        && (distribuicao.EX3_Memoriais_Entregues__c == 'Com Despacho' 
+                                    || distribuicao.EX3_Memoriais_Entregues__c == 'Sem Despacho (Turma não realiza)')
+                                        && distribuicao.EX3_Sustentacao_Foi_Realizada__c == 'Não'
+                                        && distribuicao.EX3_Sustentacao_Nao_Realizada__c == 'Acordo Formalizado')
+                                    || (distribuicao.EX3_Decisoria_Niveis_Atuacao__c == 'Memoriais e Sustentação Oral'
+                                        && distribuicao.EX3_Memoriais_Foram_Entregues__c  == 'Não'
+                                        && (distribuicao.EX3_Memoriais_Nao_Entregues__c == 'Retirado de Pauta' 
+                                            || distribuicao.EX3_Memoriais_Nao_Entregues__c == 'Acordo Formalizado'
+                                            || distribuicao.EX3_Memoriais_Nao_Entregues__c == 'Decisão Validada com Advogado Interno'
+                                            || distribuicao.EX3_Memoriais_Nao_Entregues__c == 'Entregue Anteriormente')
+                                        && distribuicao.EX3_Sustentacao_Foi_Realizada__c == 'Não'
+                                        && distribuicao.EX3_Sustentacao_Nao_Realizada__c == 'Acordo Formalizado')
+                                    ){
+                                        distribuicao.EX3_Etapa__c = '10';
+                                        distribuicao.EX3_Data_de_Conclusao_Reportar_Status__c = System.today();
+                                        if(distribuicao.EX3_Conclusao_da_Pasta__c != null){
+                                            distribuicao.EX3_Resultado_da_Segunda_Instancia__c = distribuicao.EX3_Conclusao_da_Pasta__c;
+                                        }else{
+                                            distribuicao.EX3_Resultado_da_Segunda_Instancia__c = 'Acordo Formalizado';
+                                        }
+                                        EX3_DefineResponsavelEtapa.definirUltimaModificacaoReportarStatusAtuacao(distribuicao, distribuicaoOld);
+                                        continue;
+                                    }
+                                    
                                     EX3_DefineResponsavelEtapa.definirUltimaModificacaoReportarStatusAtuacao(distribuicao, distribuicaoOld);
                                     EX3_DefineResponsavelEtapa.definirResponsavelReportarResultado(distribuicao, responsavelName);
                                     distribuicao.EX3_Etapa__c = '9';    
+                                    distribuicao.EX3_Resultado_da_Segunda_Instancia__c = null;
                                 }
                                 if(validarCamposReportarResultadoPorObjeto(distribuicao)){
-
+                                    
                                     EX3_DefineResponsavelEtapa.definirUltimaModificacaoReportarResultadoPorObjeto(distribuicao, distribuicaoOld);
-                                    //distribuicao.EX3_Data_de_Conclusao_Reportar_Resultado__c = (distribuicao.EX3_Data_de_Conclusao_Reportar_Resultado__c == null) ? System.today() : distribuicao.EX3_Data_de_Conclusao_Reportar_Resultado__c;
 
                                     EX3_DefineResponsavelEtapa.definirResponsavelReportarResultado(distribuicao, responsavelName);
-                                    distribuicao.EX3_Etapa__c = '9';    
+                                    distribuicao.EX3_Etapa__c = '10';    
+                                    if(distribuicao.EX3_Conclusao_da_Pasta__c != null){
+                                        distribuicao.EX3_Resultado_da_Segunda_Instancia__c = distribuicao.EX3_Conclusao_da_Pasta__c;
+                                    }else{
+                                        distribuicao.EX3_Resultado_da_Segunda_Instancia__c = 'Acordo Formalizado';
+                                    }
                                 }
                             }
                         }

@@ -102,6 +102,12 @@
 
 				contador++;
 
+				// Se o motivo do pedido for um dos listados abaixo, desconsiderar para o resultado da pasta
+				if(records[i].EX3_Nome_do_Pedido__c.includes('Justiça Gratuita') || records[i].EX3_Nome_do_Pedido__c.includes('Honorários Advocatícios')
+				|| records[i].EX3_Nome_do_Pedido__c.includes('HONORARIOS SUCUMBENCIA RECLAMANTE')|| records[i].EX3_Nome_do_Pedido__c.includes('Interrupção da Prescrição')){
+					continue;
+				}
+
 				if(records[i].EX3_Resultado_2_Instancia__c == '3' ){
 					ganhamos++;
 				}

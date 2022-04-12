@@ -49,12 +49,15 @@ public with sharing class EX3_AlteraDatasEtapas {
                     distribuicao.EX3_Data_de_Conclusao_Reportar_Status__c = (distribuicao.EX3_Data_de_Conclusao_Reportar_Status__c == null) ? System.today() : distribuicao.EX3_Data_de_Conclusao_Reportar_Status__c;
                     distribuicao.EX3_Data_de_Inicio_Reportar_Resultado__c = (distribuicao.EX3_Data_de_Inicio_Reportar_Resultado__c == null) ? System.today() : distribuicao.EX3_Data_de_Inicio_Reportar_Resultado__c;
 
-                    if (!Trigger.isInsert){
-                        if(distribuicao.EX3_Conclusao_da_Pasta__c != distribuicaoOld.EX3_Conclusao_da_Pasta__c){
+                    /* if (!Trigger.isInsert){
+                        if(distribuicao.EX3_Conclusao_da_Pasta__c != null && (distribuicao.EX3_Conclusao_da_Pasta__c != distribuicaoOld.EX3_Conclusao_da_Pasta__c)){
                             distribuicao.EX3_Data_de_Conclusao_Reportar_Resultado__c = (distribuicao.EX3_Conclusao_da_Pasta__c == null) ? null : System.today();
                         }
-                    }
+                    } */
          
+                }
+                when '10'{
+                    distribuicao.EX3_Data_de_Conclusao_Reportar_Resultado__c = (distribuicao.EX3_Conclusao_da_Pasta__c == null || distribuicao.EX3_Conclusao_da_Pasta__c == '') ? null : System.today();
                 }
             }
         }

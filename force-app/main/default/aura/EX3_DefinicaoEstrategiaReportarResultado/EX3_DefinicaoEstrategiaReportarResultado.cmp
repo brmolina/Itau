@@ -24,7 +24,7 @@
                 </aura:set>
                 <aura:set attribute="footer">
                     <div class="slds-clearfix">
-                        <div class="slds-text-align_left">Conclusão da Pasta: <b>{!v.distribuicao.EX3_Conclusao_da_Pasta__c}</b></div>
+                        <div class="slds-text-align_left">Conclusão do Acórdão: <b>{!v.distribuicao.EX3_Conclusao_da_Pasta__c}</b></div>
                             <lightning:button disabled = "{!(!and(v.records.length > 0,v.distribuicao.EX3_Etapa__c == '9'))}" label="Salvar" class="slds-float_right"  onclick="{!c.handleSalvar}" />
                     </div>
                     
